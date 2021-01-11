@@ -1,0 +1,43 @@
+<style type="text/css">
+	.card{
+		max-width: 700px;
+	}
+	.card-body{
+		padding: 20px;
+	}
+</style>
+
+<div class="container">
+	<div class="row">
+
+		<!-- Blog Post -->
+		<div class="card m-auto">
+            <div class="card-body my-1">
+                <p class="card-text"> by {{post.author}} at {{ post.post_date }}
+                    {% if user.is_authenticated %}
+                        {% if user.id == post.author.id %}
+                            <a class="p-5 card-link my-1" href="{% url 'update_post' post.pk %}">Edit</a> 
+                            <a class="card-link my-1" href="{% url 'delete_post' post.pk %}">Delete</a>
+                        {% endif %}
+                    {% endif %}
+                </p>
+            </div>
+
+            <div class="card-body mt-2 mb-2">
+				<a href="{% url 'article-detail' %}">
+                    <h2 class="card-title">{{post.title}}</h2>
+				</a>
+				
+				
+			</div>
+
+			<a href="{% url 'article-detail' %}">
+				<img class="card-img-top" src="{{post.header_image.url}}">
+			</a>
+			
+			<div class="card-body mt-2 mb-2">
+				<p class="card-text">{{post.body|safe|truncatechars:180}}</p>
+			</div>
+		</div>
+	</div>
+</div>

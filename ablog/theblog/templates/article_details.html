@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %} {{ post.title_tag }} {% endblock %}
+
+{% block content %}
+<style type="text-css">
+    
+    .card {
+        mac-width: 700px;
+    }
+    .container {
+        padder: 20px;
+    }
+</style>
+
+<div class="container">
+    <div class="row">
+        
+        <div class="card m-auto">
+            <div class="card-body my-1">
+                <p class="card-text"> by {{post.author}} at {{ post.post_date }}
+                    {% if user.is_authenticated %}
+                        {% if user.id == post.author.id %}
+                            <a class="p-5 card-link my-1" href="{% url 'update_post' post.pk %}">Edit</a> 
+                            <a class="card-link my-1" href="{% url 'delete_post' post.pk %}">Delete</a>
+                        {% endif %}
+                    {% endif %}
+                </p>
+                
+            </div>
+            <div class="card-body my-2">
+                <h2 class="card-title">{{ post.title }}</h2>
+            </div>
+            {% if post.header_image %}
+                <img class="card-img-top" src="{{ post.header_image.url}}">
+            {% endif %}
+            <div class="card-body my-2">
+                <p class="card-text">{{ post.body|safe }} </p>
+            </div>
+        </div>
+    </div>
+</div>
+</br>
+<div class="text-center">
+<form action="{% url 'like_post' post.pk %}" method="POST">
+    {% csrf_token %}
+    {% if user.is_authenticated %}
+        {% if liked %}
+            <button type="submit", name="post_id", value="{{ post.id }}", class="btn btn-danger btn-sm">Unlike</button>
+        {% else %}
+            <button type="submit", name="post_id", value="{{ post.id }}", class="btn btn-primary btn-sm">Like</button>
+        {% endif %}
+    {% else %}
+    <small><a href="{% url 'login' %}">Login</a> to like </small>
+    {% endif %}
+
+    - {{ total_likes }} Likes
+</form>
+</br>
+</br>
+<a href="{% url 'add_comment' post.pk %}"> Yorum yap</a>
+</br></br>
+{% if not post.comments.all %} 
+    <p class="card-text"> Yorum yok. </p>
+{% else %}
+    {% for comment in post.comments.all %}
+        <strong>
+            {{ comment.name }}- {{ comment.date_added }}
+        </strong>
+        </br>
+        {{ comment.body }}
+    </br></br>
+    {% endfor %}
+{% endif %}   
+
+<a href="{% url 'add_comment' post.pk %}"> Yorum yap</a>
+</div>
+
+{% endblock %}

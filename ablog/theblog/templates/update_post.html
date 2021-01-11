@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %} Edip Blog Post {% endblock %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+  {% if user.id == post.author.id %}
+    <h1>Edit BP</h1>
+    <br/><br/>
+
+    <div class="form-group">
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.media }}
+            {{ form.as_p }}
+          <button class="btn btn-secondary">Post </button>
+    </div>
+  {% else %}
+    You r not allowed here! :)
+  {% endif %}
+
+{% else %}
+
+You r not allowed here! :)
+
+{% endif %}
+
+{% endblock %}
